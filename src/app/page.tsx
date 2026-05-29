@@ -3,9 +3,8 @@
 import { useRef } from 'react'
 import Link from 'next/link'
 import { m, useInView, useSpring, useReducedMotion } from 'framer-motion'
-import type { MotionStyle, TargetAndTransition } from 'framer-motion'
 import {
-  DollarSign, Scale, Users, Megaphone, Headphones, TrendingUp,
+  DollarSign, Scale, Users, Megaphone, Headphones,
   Zap, Bot, Plug, GitBranch, Inbox, BarChart3, CheckCircle2, X, ArrowDown,
   ChevronRight,
 } from 'lucide-react'
@@ -15,10 +14,9 @@ import { Footer } from '@/components/footer'
 import { AnimatedText } from '@/components/animated-text'
 import { TextScramble } from '@/components/text-scramble'
 import { MagneticButton } from '@/components/magnetic-button'
-import { MagneticCard } from '@/components/magnetic-card'
 import { Counter } from '@/components/counter'
-import { ChatDemo } from '@/components/chat-demo'
-import { SvgDiagram } from '@/components/svg-diagram'
+import { NeuralNetwork } from '@/components/neural-network'
+import { DeptCarousel } from '@/components/dept-carousel'
 import { FloatingCard } from '@/components/floating-card'
 import { SectionReveal } from '@/components/section-reveal'
 
@@ -47,13 +45,12 @@ const sectionSubtitle = {
   maxWidth: '480px',
 }
 
-const departments = [
-  { label: 'Financeiro', icon: DollarSign, desc: 'Fluxo de caixa, relatórios e análise financeira em tempo real.' },
-  { label: 'Juridico', icon: Scale, desc: 'Contratos, compliance e documentação legal automatizados.' },
-  { label: 'Recursos Humanos', icon: Users, desc: 'Triagem de candidatos, onboarding e políticas de RH.' },
-  { label: 'Marketing', icon: Megaphone, desc: 'Criação de conteúdo, campanhas e análise de desempenho.' },
-  { label: 'Atendimento', icon: Headphones, desc: 'Respostas padronizadas, escalação e histórico unificado.' },
-  { label: 'Comercial', icon: TrendingUp, desc: 'Propostas, follow-up e pipeline de vendas automatizado.' },
+const deptSidebar = [
+  { label: 'Financeiro', icon: DollarSign },
+  { label: 'Jurídico', icon: Scale },
+  { label: 'RH', icon: Users },
+  { label: 'Marketing', icon: Megaphone },
+  { label: 'Atendimento', icon: Headphones },
 ]
 
 const features = [
@@ -153,7 +150,7 @@ function DashboardMockup() {
               </svg>
               <span style={{ fontSize: '11px', fontWeight: 500, color: '#14B8A6' }}>Proxim</span>
             </div>
-            {departments.slice(0, 5).map((dept, i) => {
+            {deptSidebar.map((dept, i) => {
               const Icon = dept.icon
               return (
                 <div
@@ -232,7 +229,7 @@ export default function HomePage() {
                 AI Operating System
               </m.p>
 
-              <AnimatedText text="Sua empresa inteira. Operada por IA." delay={0.2} className="mb-6" tag="h1" style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 500, color: 'rgba(255,255,255,0.95)', lineHeight: 1.15, marginBottom: '24px', display: 'flex', flexWrap: 'wrap', gap: '0.25em' }} />
+              <AnimatedText text="Cada área da sua empresa. Potencializada por IA." delay={0.2} className="mb-6" tag="h1" style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 500, color: 'rgba(255,255,255,0.95)', lineHeight: 1.15, marginBottom: '24px', display: 'flex', flexWrap: 'wrap', gap: '0.25em' }} />
 
               <m.p
                 style={{ ...sectionSubtitle, marginBottom: '36px' }}
@@ -277,8 +274,19 @@ export default function HomePage() {
         </section>
 
         {/* O Problema */}
-        <section style={{ background: '#0A1A1A', padding: '96px 0' }}>
-          <div className="mx-auto max-w-6xl px-6">
+        <section style={{ background: '#0A1A1A', padding: '96px 0', position: 'relative', overflow: 'hidden' }}>
+          {/* Subtle animated grid */}
+          <m.div
+            style={{
+              position: 'absolute', inset: 0, pointerEvents: 'none',
+              backgroundImage: 'linear-gradient(rgba(20,184,166,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,0.03) 1px, transparent 1px)',
+              backgroundSize: '48px 48px',
+            }}
+            animate={shouldReduce ? {} : { backgroundPosition: ['0px 0px', '0px 48px'] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+          />
+
+          <div className="mx-auto max-w-6xl px-6" style={{ position: 'relative' }}>
             <SectionReveal style={{ textAlign: 'center', marginBottom: '64px' }}>
               <p style={sectionLabel}>O problema</p>
               <h2 style={sectionTitle}>Ferramentas demais. Tempo de menos.</h2>
@@ -286,31 +294,94 @@ export default function HomePage() {
             </SectionReveal>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '32px', alignItems: 'start' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <p style={{ fontSize: '11px', fontWeight: 500, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Sem o Proxim</p>
+              {/* Sem Proxim */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <m.p
+                  style={{ fontSize: '11px', fontWeight: 500, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}
+                  initial={shouldReduce ? false : { opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Sem o Proxim
+                </m.p>
                 {painPoints.map((p, i) => (
-                  <SectionReveal key={p} delay={i * 0.06}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                      <X size={14} color="#EF4444" style={{ marginTop: '2px', flexShrink: 0 }} />
-                      <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{p}</span>
-                    </div>
-                  </SectionReveal>
+                  <m.div
+                    key={p}
+                    initial={shouldReduce ? false : { opacity: 0, x: -16 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: '-30px 0px' }}
+                    transition={{ delay: i * 0.07, duration: 0.2 }}
+                    whileHover={shouldReduce ? {} : { x: 3 }}
+                    style={{
+                      display: 'flex', alignItems: 'flex-start', gap: '10px',
+                      padding: '10px 12px', borderRadius: '8px',
+                      background: 'rgba(239,68,68,0.04)',
+                      border: '0.5px solid rgba(239,68,68,0.1)',
+                      transition: 'border-color 0.15s',
+                    }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(239,68,68,0.25)' }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(239,68,68,0.1)' }}
+                  >
+                    <X size={13} color="#EF4444" style={{ marginTop: '1px', flexShrink: 0, opacity: 0.7 }} />
+                    <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>{p}</span>
+                  </m.div>
                 ))}
               </div>
 
-              <SectionReveal style={{ display: 'flex', justifyContent: 'center', paddingTop: '32px' }}>
-                <div style={{ width: '1px', height: '240px', background: '#14B8A6', opacity: 0.4 }} />
-              </SectionReveal>
+              {/* Divider */}
+              <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '44px' }}>
+                <div style={{ position: 'relative', width: '1px', height: '280px' }}>
+                  <m.div
+                    style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent, #14B8A6, transparent)' }}
+                    initial={shouldReduce ? false : { scaleY: 0, opacity: 0 }}
+                    whileInView={{ scaleY: 1, opacity: 0.35 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                  />
+                  {/* Traveling dot */}
+                  {!shouldReduce && (
+                    <m.div
+                      style={{ position: 'absolute', left: '-3px', width: '7px', height: '7px', borderRadius: '50%', background: '#14B8A6', boxShadow: '0 0 8px rgba(20,184,166,0.8)' }}
+                      animate={{ top: ['0%', '100%'] }}
+                      transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', repeatType: 'reverse' }}
+                    />
+                  )}
+                </div>
+              </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <p style={{ fontSize: '11px', fontWeight: 500, color: '#14B8A6', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Com o Proxim</p>
+              {/* Com Proxim */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <m.p
+                  style={{ fontSize: '11px', fontWeight: 500, color: '#14B8A6', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}
+                  initial={shouldReduce ? false : { opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                >
+                  Com o Proxim
+                </m.p>
                 {solutions.map((s, i) => (
-                  <SectionReveal key={s} delay={i * 0.06 + 0.3}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                      <CheckCircle2 size={14} color="#14B8A6" style={{ marginTop: '2px', flexShrink: 0 }} />
-                      <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.85)', lineHeight: 1.5 }}>{s}</span>
-                    </div>
-                  </SectionReveal>
+                  <m.div
+                    key={s}
+                    initial={shouldReduce ? false : { opacity: 0, x: 16 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: '-30px 0px' }}
+                    transition={{ delay: i * 0.07 + 0.25, duration: 0.2 }}
+                    whileHover={shouldReduce ? {} : { x: -3 }}
+                    style={{
+                      display: 'flex', alignItems: 'flex-start', gap: '10px',
+                      padding: '10px 12px', borderRadius: '8px',
+                      background: 'rgba(20,184,166,0.04)',
+                      border: '0.5px solid rgba(20,184,166,0.1)',
+                      transition: 'border-color 0.15s',
+                    }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(20,184,166,0.35)' }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(20,184,166,0.1)' }}
+                  >
+                    <CheckCircle2 size={13} color="#14B8A6" style={{ marginTop: '1px', flexShrink: 0 }} />
+                    <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.85)', lineHeight: 1.5 }}>{s}</span>
+                  </m.div>
                 ))}
               </div>
             </div>
@@ -326,8 +397,8 @@ export default function HomePage() {
               <p style={{ ...sectionSubtitle, margin: '0 auto' }}>Skills, agentes, integrações e workflows em um fluxo contínuo que opera sua empresa.</p>
             </SectionReveal>
 
-            <SectionReveal style={{ marginBottom: '64px' }}>
-              <SvgDiagram />
+            <SectionReveal style={{ marginBottom: '64px', display: 'flex', justifyContent: 'center' }}>
+              <NeuralNetwork />
             </SectionReveal>
 
             <m.div
@@ -363,45 +434,19 @@ export default function HomePage() {
         </section>
 
         {/* Departamentos */}
-        <section id="departamentos" style={{ background: '#0A1A1A', padding: '96px 0' }}>
+        <section id="departamentos" style={{ background: '#0A1A1A', padding: '96px 0', overflow: 'hidden' }}>
           <div className="mx-auto max-w-6xl px-6">
             <SectionReveal style={{ textAlign: 'center', marginBottom: '64px' }}>
               <p style={sectionLabel}>Departamentos</p>
               <h2 style={sectionTitle}>Seis áreas. Uma plataforma.</h2>
               <p style={{ ...sectionSubtitle, margin: '0 auto' }}>Cada departamento opera com agentes especializados, skills treinadas e fluxos automatizados.</p>
             </SectionReveal>
-
-            <m.div
-              style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px', marginBottom: '64px' }}
-              initial={shouldReduce ? false : 'hidden'}
-              whileInView="visible"
-              viewport={{ once: true, margin: '-60px 0px' }}
-              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
-            >
-              {departments.map(dept => {
-                const Icon = dept.icon
-                return (
-                  <MagneticCard
-                    key={dept.label}
-                    style={{ background: '#0D2020', border: '0.5px solid rgba(20,184,166,0.12)', borderRadius: '12px', padding: '20px', cursor: 'default', transition: 'border-color 0.15s' }}
-                  >
-                    <m.div variants={shouldReduce ? {} : { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.18 } } }}>
-                      <div style={{ width: '32px', height: '32px', background: 'rgba(20,184,166,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
-                        <Icon size={16} color="#14B8A6" />
-                      </div>
-                      <p style={{ fontSize: '14px', fontWeight: 500, color: 'rgba(255,255,255,0.9)', marginBottom: '6px' }}>{dept.label}</p>
-                      <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>{dept.desc}</p>
-                    </m.div>
-                  </MagneticCard>
-                )
-              })}
-            </m.div>
-
-            <SectionReveal>
-              <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginBottom: '24px' }}>Veja na prática</p>
-              <ChatDemo />
-            </SectionReveal>
           </div>
+
+          {/* Full-width carousel — intentionally overflows the max-w container */}
+          <SectionReveal>
+            <DeptCarousel />
+          </SectionReveal>
         </section>
 
         {/* Agentes */}
